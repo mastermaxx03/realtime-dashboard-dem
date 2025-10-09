@@ -1,0 +1,9 @@
+/* src/ui-component/rtmlayout/PowerFactor/AvgPFSegment.css */
+
+.pf-chart-wrapper {
+  flex-grow: 1; /* Allows the container to fill the card's vertical space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

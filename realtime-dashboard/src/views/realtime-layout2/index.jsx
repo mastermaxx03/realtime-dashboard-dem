@@ -548,7 +548,7 @@ const RealtimeLayoutPage2 = () => {
 
   useEffect(() => {
     const fetchCsvData = async () => {
-      const csvFilePath = "/data/dashboard_simulation_data.csv"; // Path to your CSV in the 'public' folder
+      const csvFilePath = "/dashboard_simulation_data.csv"; // Path to your CSV in the 'public' folder
       try {
         const response = await fetch(csvFilePath);
         const csvText = await response.text();
@@ -558,7 +558,8 @@ const RealtimeLayoutPage2 = () => {
           skipEmptyLines: true,
           complete: (results) => {
             if (results.data && results.data.length > 0) {
-              setAllTelemetryData(results.data); // Store all samples in state
+              console.log("HEADERS FROM CSV:", results.data[0]); // <-- ADD THIS LINE
+              setAllTelemetryData(results.data);
             } else {
               throw new Error("CSV file is empty or could not be parsed.");
             }
@@ -584,7 +585,7 @@ const RealtimeLayoutPage2 = () => {
     const intervalId = setInterval(() => {
       // The modulo operator (%) makes it loop back to 0 after the last sample
       setCurrentIndex((prevIndex) => (prevIndex + 1) % allTelemetryData.length);
-    }, 2000); // 60000 milliseconds = 1 minute
+    }, 5000); // 60000 milliseconds = 1 minute
 
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(intervalId);
@@ -929,82 +930,56 @@ const RealtimeLayoutPage2 = () => {
           {isFullscreen ? <Minimize size={12} /> : <Maximize size={12} />}
         </button>
 
+        {/* Row 1 */}
         <div className="dashboard-layout">
-          {/* Row 1 */}
+          {/* All 'card-span-*' classes have been removed */}
+
           <PanelInfoSegment
-            className="card-span-6"
             data={panelInfoData}
             onExpandClick={handleOpenPanelModal}
           />
-
-          <AvgPFSegment
-            className="card-span-3"
-            data={avgPFData}
-            onExpandClick={handleOpenAvgPFModal}
-          />
+          <AvgPFSegment data={avgPFData} onExpandClick={handleOpenAvgPFModal} />
           <TotalPowerSegment
-            className="card-span-6"
             data={totalPowerData}
             onExpandClick={handleOpenTotalPowerModal}
           />
-
           <RealtimeCost
-            className="card-span-3"
             data={costData}
             isLoading={isCostLoading}
             onExpandClick={() => {}}
           />
-          {/* Row 2 */}
+
           <CurrentCompSegment
-            className="card-span-6"
             data={currentData}
             onExpandClick={handleOpenCurrentCompModal}
           />
-
-          <PerformanceSegment
-            className="card-span-3"
-            score={performanceData.score}
-            machineId={did}
-          />
-
+          <PerformanceSegment score={performanceData.score} machineId={did} />
           <EnergyConsumptionSegment
-            className="card-span-6"
             data={energyConsumptionData}
             activeMetric={activeEnergy}
             onSelectMetric={setActiveEnergy}
             onExpandClick={handleOpenEConsumptionModal}
           />
           <THDSegment
-            className="card-span-3"
             vData={thdvData}
             iData={thdiData}
             onExpandClick={handleOpenHarmonicsModal}
           />
-          {/* Row 3 */}
+
           <VoltageSegment
-            className="card-span-6"
             data={voltageData}
             onExpandClick={handleOpenVoltageModal}
           />
-
-          <LoadSegment
-            className="card-span-3"
-            data={loadData}
-            onExpandClick={handleOpenRTLoadModal}
-          />
+          <LoadSegment data={loadData} onExpandClick={handleOpenRTLoadModal} />
           <VoltageLNSegment
-            className="card-span-6"
             data={voltageLNData}
             onExpandClick={handleOpenVoltageLNModal}
           />
-
           <FrequencySegment
-            className="card-span-3"
             data={frequencyData}
             onExpandClick={handleOpenFrequencyModal}
           />
         </div>
-
         {isPanelModalOpen &&
           pageRef.current &&
           createPortal(

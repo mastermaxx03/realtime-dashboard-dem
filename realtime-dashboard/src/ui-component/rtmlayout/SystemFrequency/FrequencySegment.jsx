@@ -1,30 +1,32 @@
-import React from 'react';
-import FrequencyRingChartSeg from './FrequencyRingChartSeg';
-import { Maximize } from 'lucide-react';
-// CHANGED: Import the shared header style
-import { segmentCardStyle, segmentTitleStyle, expandIconStyle, segmentHeaderStyle, chartWrapperStyle } from '../../../styles/commonStyles';
+import React from "react";
+import { Maximize } from "lucide-react";
+import Card from "../../common/commonCard"; // Import the reusable Card
+import FrequencyRingChartSeg from "./FrequencyRingChartSeg";
+import "./FrequencySegment.css"; // Import the new CSS file
 
-const styles = {
-  chartContainer: {
-    // Let's give it a reasonable size that doesn't break the layout
-    width: '150px',
-    height: '150px'
-  }
-};
+export default function FrequencySegment({ data, onExpandClick, className }) {
+  // Define the controls for the card's header
+  const headerControls = (
+    <Maximize
+      size={16}
+      style={{ cursor: "pointer", color: "#64748B" }}
+      onClick={onExpandClick}
+    />
+  );
 
-export default function FrequencySegment({ data, onExpandClick }) {
   return (
-    // The root div now just uses the common card style
-    <div style={segmentCardStyle}>
-      {/* CHANGED: Use the imported segmentHeaderStyle for perfect alignment */}
-      <div style={segmentHeaderStyle}>
-        <div style={segmentTitleStyle}>System Frequency</div>
-        <Maximize size={16} style={expandIconStyle} onClick={onExpandClick} />
+    // Use the standard Card component for a consistent layout
+    <Card
+      title="System Frequency"
+      headerControls={headerControls}
+      className={className}
+    >
+      {/* The content is now the child of the Card component */}
+      <div className="frequency-chart-wrapper">
+        {/* We can give the chart a container to control its size if needed, 
+            but the wrapper is enough for centering. */}
+        <FrequencyRingChartSeg value={data ? data.avg : 0} />
       </div>
-
-      <div style={chartWrapperStyle}>
-        <FrequencyRingChartSeg value={data.avg} />
-      </div>
-    </div>
+    </Card>
   );
 }

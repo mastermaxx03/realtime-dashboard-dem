@@ -1,11 +1,8 @@
 import React from "react";
 import ReactECharts from "echarts-for-react";
 import { Maximize } from "lucide-react";
-import {
-  segmentCardStyle,
-  expandIconStyle,
-  segmentTitleStyle,
-} from "../../../styles/commonStyles";
+import Card from "../../common/commonCard"; // 1. Import the reusable Card
+import "./AvgPFSegment.css"; // 2. Import the new CSS file
 
 // --- ECharts modular (tree-shaken) imports ---
 import * as echarts from "echarts/core";
@@ -14,57 +11,34 @@ import { TitleComponent } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
 echarts.use([PieChart, TitleComponent, CanvasRenderer]);
 
-// ---- Styles ----
-const styles = {
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-
-    marginBottom: 8,
-  },
-  chartWrapper: {
-    flexGrow: 1,
-    height: "150px",
-  },
-};
-
 // --- Incentive/Penalty Logic ---
 const getIncentivePenalty = (avgPF) => {
-  // Incentive Ranges
-  if (avgPF >= 0.955) return { text: "Incentive", color: "#22c55e" }; // Green
-  if (avgPF >= 0.951) return { text: "Neutral", color: "#64748B" }; // Gray
-
-  // Penalty Ranges
-  if (avgPF < 0.895) return { text: "Penalty", color: "#ef4444" }; // Red
-
-  // Neutral Zone
+  if (avgPF >= 0.955) return { text: "Incentive", color: "#22c55e" };
+  if (avgPF >= 0.951) return { text: "Neutral", color: "#64748B" };
+  if (avgPF < 0.895) return { text: "Penalty", color: "#ef4444" };
   return { text: "Neutral", color: "#64748B" };
 };
 
-export default function AvgPFSegment({ data, onExpandClick }) {
+// 3. Add the 'className' prop
+export default function AvgPFSegment({ data, onExpandClick, className }) {
   if (!data) {
     return (
-      <div style={segmentCardStyle}>
-        <div style={styles.header}>
-          <div style={segmentTitleStyle}>Power Factor Level</div>
-        </div>
-      </div>
+      <Card title="Power Factor Level" className={className}>
+        <div>Loading...</div>
+      </Card>
     );
   }
 
+  const avgPFValue = data.avg || 0; // Safety check for data
   const maxPF = 1.0;
-  const status = getIncentivePenalty(data.avg);
+  const status = getIncentivePenalty(avgPFValue);
 
   const donutOption = {
-    // Use the 'title' to place rich text in the center
     title: {
-      text: `{pf|${(data.avg || 0).toFixed(1)}}\n{line|}\n{status|${
-        status.text
-      }}`,
+      text: `{pf|${avgPFValue.toFixed(3)}}\n{line|}\n{status|${status.text}}`,
       left: "center",
       top: "center",
       textStyle: {
-        // Define rich text styles for each part of the title
         rich: {
           pf: {
             fontSize: 24,
@@ -81,7 +55,7 @@ export default function AvgPFSegment({ data, onExpandClick }) {
           status: {
             fontSize: 14,
             fontWeight: "600",
-            color: status.color, // Use the dynamic color
+            color: status.color,
             padding: [5, 0],
           },
         },
@@ -95,9 +69,9 @@ export default function AvgPFSegment({ data, onExpandClick }) {
         label: { show: false },
         hoverAnimation: false,
         data: [
-          { value: data.avg, itemStyle: { color: status.color } }, // Ring color matches status
+          { value: avgPFValue, itemStyle: { color: status.color } }, // 4. Added safety check
           {
-            value: maxPF - data.avg,
+            value: maxPF - avgPFValue,
             itemStyle: { color: "#E2E8F0", opacity: 0.5 },
           },
         ],
@@ -105,13 +79,23 @@ export default function AvgPFSegment({ data, onExpandClick }) {
     ],
   };
 
+  // 5. Define headerControls for the Card
+  const headerControls = (
+    <Maximize
+      size={16}
+      style={{ cursor: "pointer", color: "#64748B" }}
+      onClick={onExpandClick}
+    />
+  );
+
+  // 6. Use the standard Card component structure
   return (
-    <div style={segmentCardStyle}>
-      <div style={styles.header}>
-        <div style={segmentTitleStyle}>Power Factor Level</div>
-        <Maximize size={16} style={expandIconStyle} onClick={onExpandClick} />
-      </div>
-      <div style={styles.chartWrapper}>
+    <Card
+      title="Power Factor Level"
+      headerControls={headerControls}
+      className={className}
+    >
+      <div className="pf-chart-wrapper">
         <ReactECharts
           echarts={echarts}
           option={donutOption}
@@ -120,6 +104,6 @@ export default function AvgPFSegment({ data, onExpandClick }) {
           style={{ height: "100%", width: "100%" }}
         />
       </div>
-    </div>
+    </Card>
   );
 }
