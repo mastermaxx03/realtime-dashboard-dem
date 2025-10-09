@@ -584,7 +584,7 @@ const RealtimeLayoutPage2 = () => {
     const intervalId = setInterval(() => {
       // The modulo operator (%) makes it loop back to 0 after the last sample
       setCurrentIndex((prevIndex) => (prevIndex + 1) % allTelemetryData.length);
-    }, 60000); // 60000 milliseconds = 1 minute
+    }, 2000); // 60000 milliseconds = 1 minute
 
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(intervalId);
@@ -748,12 +748,12 @@ const RealtimeLayoutPage2 = () => {
     title: "3PH LINE CURRENT CONSUMPTION",
     timestamp: new Date(currentRecord.TS).toLocaleString(),
     currents: {
-      ir: currentRecord.IR.toFixed(1),
-      iy: currentRecord.IY.toFixed(1),
-      ib: currentRecord.IB.toFixed(1),
+      ir: (currentRecord.IR || 0).toFixed(1),
+      iy: (currentRecord.IY || 0).toFixed(1),
+      ib: (currentRecord.IB || 0).toFixed(1),
     },
-    avg_i: currentRecord.AVG_I.toFixed(1),
-    max_dev: currentRecord.I_MAX_DEV.toFixed(1),
+    avg_i: (currentRecord.AVG_I || 0).toFixed(1),
+    max_dev: (currentRecord.I_MAX_DEV || 0).toFixed(1),
   };
   const timestamp = new Date(currentRecord.TS).toLocaleString();
   const date = new Date(currentRecord.TS).toLocaleDateString();
@@ -776,17 +776,20 @@ const RealtimeLayoutPage2 = () => {
     time,
     phasorVolts: [currentRecord.VRY, currentRecord.VYB, currentRecord.VBR],
     phasorTable: [
-      { label: "VRY", value: `${currentRecord.VRY.toFixed(1)}V` },
-      { label: "VYB", value: `${currentRecord.VYB.toFixed(1)}V` },
-      { label: "VBR", value: `${currentRecord.VBR.toFixed(1)}V` },
+      { label: "VRY", value: `${(currentRecord.VRY || 0).toFixed(1)}V` },
+      { label: "VYB", value: `${(currentRecord.VYB || 0).toFixed(1)}V` },
+      { label: "VBR", value: `${(currentRecord.VBR || 0).toFixed(1)}V` },
     ],
     imbalanceMetrics: [
-      { label: "Max Dev", value: `${currentRecord.LL_MAX_DEV.toFixed(1)}V` },
+      {
+        label: "Max Dev",
+        value: `${(currentRecord.LL_MAX_DEV || 0).toFixed(1)}V`,
+      },
       {
         label: "Voltage Imbalance",
-        value: `${currentRecord.LL_VOL_IMB.toFixed(1)}%`,
+        value: `${(currentRecord.LL_VOL_IMB || 0).toFixed(1)}%`,
       },
-      { label: "V AVG", value: `${currentRecord.AVG_VLL.toFixed(1)}V` },
+      { label: "V AVG", value: `${(currentRecord.AVG_VLL || 0).toFixed(1)}V` },
     ],
   };
 
@@ -797,17 +800,20 @@ const RealtimeLayoutPage2 = () => {
     time,
     phasorVolts: [currentRecord.VR, currentRecord.VY, currentRecord.VB],
     phasorTable: [
-      { label: "VRN", value: `${currentRecord.VR.toFixed(1)}V` },
-      { label: "VYN", value: `${currentRecord.VY.toFixed(1)}V` },
-      { label: "VBN", value: `${currentRecord.VB.toFixed(1)}V` },
+      { label: "VRN", value: `${(currentRecord.VR || 0).toFixed(1)}V` },
+      { label: "VYN", value: `${(currentRecord.VY || 0).toFixed(1)}V` },
+      { label: "VBN", value: `${(currentRecord.VB || 0).toFixed(1)}V` },
     ],
     imbalanceMetrics: [
-      { label: "Max Dev", value: `${currentRecord.LN_MAX_DEV.toFixed(1)}V` },
+      {
+        label: "Max Dev",
+        value: `${(currentRecord.LN_MAX_DEV || 0).toFixed(1)}V`,
+      },
       {
         label: "Voltage Imbalance",
-        value: `${currentRecord.LN_VOL_IMB.toFixed(1)}%`,
+        value: `${(currentRecord.LN_VOL_IMB || 0).toFixed(1)}%`,
       },
-      { label: "V AVG", value: `${currentRecord.AVG_VLN.toFixed(1)}V` },
+      { label: "V AVG", value: `${(currentRecord.AVG_VLN || 0).toFixed(1)}V` },
     ],
   };
 
@@ -868,14 +874,14 @@ const RealtimeLayoutPage2 = () => {
     },
     // Nested object for the donut chart
     totalPower: {
-      kw: currentRecord.TOTAL_KW.toFixed(2),
-      kva: currentRecord.TOTAL_KVA.toFixed(2),
-      kvar: currentRecord.TOTAL_KVAR.toFixed(2),
+      kw: (currentRecord.TOTAL_KW || 0).toFixed(2),
+      kva: (currentRecord.TOTAL_KVA || 0).toFixed(2),
+      kvar: (currentRecord.TOTAL_KVAR || 0).toFixed(2),
     },
     // Imbalance data for the imbalance chart
-    kwImbalance: currentRecord.KW_IMB_PCT,
-    kvaImbalance: currentRecord.KVA_IMB_PCT,
-    kvarImbalance: currentRecord.KVAR_IMB_PCT,
+    kwImbalance: (currentRecord.KW_IMB_PCT || 0).toFixed(2),
+    kvaImbalance: (currentRecord.KVA_IMB_PCT || 0).toFixed(2),
+    kvarImbalance: (currentRecord.KVAR_IMB_PCT || 0).toFixed(2),
   };
 
   const harmonicsModalData = {
@@ -905,16 +911,17 @@ const RealtimeLayoutPage2 = () => {
     date,
     time,
     ratedLoad: 45, // Default value
-    realtimeLoad: currentRecord.TOTAL_KW.toFixed(2), // Use Total kVA as real-time load
+    realtimeLoad: (currentRecord.TOTAL_KW || 0).toFixed(2), // Use Total kVA as real-time load
     rtLoad: {
-      percentage: (currentRecord.TOTAL_KW / 45) * 100,
+      percentage: ((currentRecord.TOTAL_KW || 0) / 45) * 100,
     },
-    peakDemand: currentRecord.TOTAL_KVA.toFixed(2), // Use current Total kVA as peak
-    avgPower: currentRecord.TOTAL_KW.toFixed(2), // Use current Total kW as avg
+    peakDemand: (currentRecord.TOTAL_KVA || 0).toFixed(2), // Use current Total kVA as peak
+    avgPower: (currentRecord.TOTAL_KW || 0).toFixed(2), // Use current Total kW as avg
     performance: {
       score: 85, // Default value
     },
   };
+  const did = currentRecord.DID || "Unknown Device";
   return (
     <div style={styles.pageWrapper} ref={pageRef}>
       <div style={styles.pageWrapper} ref={pageRef}>
