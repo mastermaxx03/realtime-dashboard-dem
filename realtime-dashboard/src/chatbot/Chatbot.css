@@ -1,0 +1,40 @@
+.chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.chatbot-launcher {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  background-color: #6a0f8f; /* Example blue color */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+}
+
+.chatbot-launcher:hover {
+  transform: scale(1.1);
+}
+
+.chat-window {
+  width: 370px;
+  height: 370px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* Position it above the launcher button */
+  position: absolute;
+  bottom: 80px; /* 60px (launcher height) + 20px (gap) */
+  right: 0;
+}
