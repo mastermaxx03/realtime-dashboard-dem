@@ -548,7 +548,7 @@ const RealtimeLayoutPage2 = () => {
 
   useEffect(() => {
     const fetchCsvData = async () => {
-      const csvFilePath = "/dashboard_simulation_data.csv"; // Path to your CSV in the 'public' folder
+      const csvFilePath = "/dashboard_simulation_data2.csv"; // Path to your CSV in the 'public' folder
       try {
         const response = await fetch(csvFilePath);
         const csvText = await response.text();
@@ -585,7 +585,7 @@ const RealtimeLayoutPage2 = () => {
     const intervalId = setInterval(() => {
       // The modulo operator (%) makes it loop back to 0 after the last sample
       setCurrentIndex((prevIndex) => (prevIndex + 1) % allTelemetryData.length);
-    }, 5000); // 60000 milliseconds = 1 minute
+    }, 2000); // 60000 milliseconds = 1 minute
 
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(intervalId);
@@ -607,29 +607,29 @@ const RealtimeLayoutPage2 = () => {
     fetchCostData();
   }, []);
 
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      if (pageRef.current) {
-        pageRef.current.requestFullscreen().catch((err) => {
-          console.error(
-            `Error attempting to enable full-screen mode: ${err.message} (${err.name})`
-          );
-        });
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  };
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-    return () =>
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-  }, []);
+  // const toggleFullscreen = () => {
+  //   if (!document.fullscreenElement) {
+  //     if (pageRef.current) {
+  //       pageRef.current.requestFullscreen().catch((err) => {
+  //         console.error(
+  //           `Error attempting to enable full-screen mode: ${err.message} (${err.name})`
+  //         );
+  //       });
+  //     }
+  //   } else {
+  //     if (document.exitFullscreen) {
+  //       document.exitFullscreen();
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   const handleFullscreenChange = () => {
+  //     setIsFullscreen(!!document.fullscreenElement);
+  //   };
+  //   document.addEventListener("fullscreenchange", handleFullscreenChange);
+  //   return () =>
+  //     document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  // }, []);
   if (allTelemetryData.length === 0) {
     return <div>Loading and preparing data...</div>;
   }
@@ -739,7 +739,7 @@ const RealtimeLayoutPage2 = () => {
   };
 
   // For PerformanceSegment - NOTE: API data is missing for this
-  const performanceScore = currentRecord.PERFORMANCE_SCORE || 84;
+  const performanceScore = currentRecord.RT_PERF_SCORE;
 
   const performanceData = {
     score: performanceScore,
@@ -926,9 +926,9 @@ const RealtimeLayoutPage2 = () => {
   return (
     <div style={styles.pageWrapper} ref={pageRef}>
       <div style={styles.pageWrapper} ref={pageRef}>
-        <button style={styles.fullscreenButton} onClick={toggleFullscreen}>
+        {/* <button style={styles.fullscreenButton} onClick={toggleFullscreen}>
           {isFullscreen ? <Minimize size={12} /> : <Maximize size={12} />}
-        </button>
+        </button> */}
 
         {/* Row 1 */}
         <div className="dashboard-layout">

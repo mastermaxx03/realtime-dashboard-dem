@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
 // --- Icon Imports ---
-import { Tally5, History, Download, X, RefreshCw } from 'lucide-react';
+import { Tally5, History, Download, X, RefreshCw } from "lucide-react";
 
 // --- Project Imports ---
-import AvgPFBarChart from './AvgPFBarChart';
-import PFS_SliderChart from './PFS_SliderChart';
+import AvgPFBarChart from "./AvgPFBarChart";
+import PFS_SliderChart from "./PFS_SliderChart";
 // --- CHANGE: Assuming a reusable MetricBar component exists ---
-import MetricBar from './MetricBarChart'; // Adjust this import path as needed
+import MetricBar from "./MetricBarChart"; // Adjust this import path as needed
 import {
   modalCardStyle,
   modalHeaderStyle,
@@ -18,8 +18,8 @@ import {
   modalColumnStyle,
   modalFooterStyle,
   modalButtonStyle,
-  modalButtonPrimaryStyle
-} from '../../../styles/modalLayout';
+  modalButtonPrimaryStyle,
+} from "../../../styles/modalLayout";
 
 // --- Logic from the Incentive/Penalty Table ---
 const getIncentivePenaltyPercent = (avgPF) => {
@@ -56,14 +56,30 @@ export default function AvgPFModal({ data, onClose, onRefresh }) {
   const phaseValues = Object.values(data.phases);
   const maxDev = Math.max(...phaseValues) - Math.min(...phaseValues);
   const pfImbalance = data.avg > 0 ? (maxDev / data.avg) * 100 : 0;
-
+  const phaseChartData = [
+    data.phases.r ?? data.phases.R,
+    data.phases.y ?? data.phases.Y,
+    data.phases.b ?? data.phases.B,
+  ];
   const sliderValue = getIncentivePenaltyPercent(data.avg);
 
   // Data for the metric bars in the right column
   const metricsData = [
-    { label: 'Max Devn', value: maxDev.toFixed(3), percentage: (maxDev / 0.2) * 100 }, // Assuming max possible dev is 0.2
-    { label: 'PF Imbalance', value: `${pfImbalance.toFixed(2)}%`, percentage: pfImbalance },
-    { label: 'Avg P.F.', value: data.avg.toFixed(3), percentage: data.avg * 100 }
+    {
+      label: "Max Devn",
+      value: maxDev.toFixed(3),
+      percentage: (maxDev / 0.2) * 100,
+    }, // Assuming max possible dev is 0.2
+    {
+      label: "PF Imbalance",
+      value: `${pfImbalance.toFixed(2)}%`,
+      percentage: pfImbalance,
+    },
+    {
+      label: "Avg P.F.",
+      value: data.avg.toFixed(3),
+      percentage: data.avg * 100,
+    },
   ];
 
   return (
@@ -71,7 +87,10 @@ export default function AvgPFModal({ data, onClose, onRefresh }) {
       {/* Header */}
       <div style={modalHeaderStyle}>
         <h2 style={modalHeaderTitleStyle}>
-          {data.title || 'AVERAGE PF FACTOR'} <span style={{ fontSize: '0.8rem', color: '#6c757d' }}>Ref {data.ref}</span>
+          {data.title || "AVERAGE PF FACTOR"}{" "}
+          <span style={{ fontSize: "0.8rem", color: "#6c757d" }}>
+            Ref {data.ref}
+          </span>
         </h2>
         <div style={modalHeaderControlsStyle}>
           <span>{data.date}</span>
@@ -88,16 +107,18 @@ export default function AvgPFModal({ data, onClose, onRefresh }) {
 
       {/* Content */}
       {/* --- CHANGE: Main content is a column, containing the 2-col layout and the slider --- */}
-      <div style={{ ...modalContentStyle, flexDirection: 'column', flexGrow: 1 }}>
+      <div
+        style={{ ...modalContentStyle, flexDirection: "column", flexGrow: 1 }}
+      >
         {/* Top Two-Column Section */}
-        <div style={{ display: 'flex', gap: '12px', flexGrow: 1 }}>
+        <div style={{ display: "flex", gap: "12px", flexGrow: 1 }}>
           {/* Left Column: Phase Bar Chart */}
-          <div style={modalColumnStyle}>
-            <AvgPFBarChart data={data.phases} timestamp={data.timestamp} />
+          <div style={{ ...modalColumnStyle, minHeight: "250px" }}>
+            <AvgPFBarChart data={phaseChartData} timestamp={data.timestamp} />
           </div>
 
           {/* Right Column: New Metric Bars */}
-          <div style={{ ...modalColumnStyle, justifyContent: 'center' }}>
+          <div style={{ ...modalColumnStyle, justifyContent: "center" }}>
             {metricsData.map((metric) => (
               <MetricBar
                 key={metric.label}
@@ -105,15 +126,19 @@ export default function AvgPFModal({ data, onClose, onRefresh }) {
                 value={metric.value}
                 percentage={metric.percentage}
                 // Placeholder color - can be made dynamic later
-                color={metric.label === 'Avg P.F.' ? '#4CAF50' : '#4CAF50'}
+                color={metric.label === "Avg P.F." ? "#4CAF50" : "#4CAF50"}
               />
             ))}
           </div>
         </div>
 
         {/* Bottom Section: Slider Chart */}
-        <div style={{ height: '200px', flexShrink: 0 }}>
-          <PFS_SliderChart value={sliderValue} avgPF={data.avg} timestamp={data.timestamp} />
+        <div style={{ height: "200px", flexShrink: 0 }}>
+          <PFS_SliderChart
+            value={sliderValue}
+            avgPF={data.avg}
+            timestamp={data.timestamp}
+          />
         </div>
       </div>
 

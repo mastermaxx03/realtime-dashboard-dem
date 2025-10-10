@@ -27,7 +27,7 @@ export default function LoadSegment({ data, onExpandClick, className }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          height: "100px",
+          minHeight: 220,
         }}
       >
         {/* Render the chart component, passing the percentage */}

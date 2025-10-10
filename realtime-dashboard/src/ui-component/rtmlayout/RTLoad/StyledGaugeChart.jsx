@@ -1,30 +1,39 @@
-import React from 'react';
-import ReactECharts from 'echarts-for-react';
+import React from "react";
+import ReactECharts from "echarts-for-react";
 
-import * as echarts from 'echarts/core';
-import { GaugeChart } from 'echarts/charts';
-import { TooltipComponent } from 'echarts/components';
-import { CanvasRenderer } from 'echarts/renderers';
+import * as echarts from "echarts/core";
+import { GaugeChart } from "echarts/charts";
+import { TooltipComponent } from "echarts/components";
+import { CanvasRenderer } from "echarts/renderers";
 echarts.use([GaugeChart, TooltipComponent, CanvasRenderer]);
 
-export default function StyledGaugeChart({ value = 0, statusMessage = '', statusColor = '#333', unit = '%' }) {
+export default function StyledGaugeChart({
+  value = 0,
+  statusMessage = "",
+  statusColor = "#333",
+  unit = "%",
+}) {
   const option = {
     tooltip: {
-      formatter: `{a|${statusMessage}}<br>{b|Value}: {c|${value.toFixed(2)}${unit}}`,
-      backgroundColor: 'rgba(50,50,50,0.8)',
-      borderColor: '#333',
+      trigger: "item",
+      renderMode: "richText", // <- important
+      backgroundColor: "rgba(50,50,50,0.8)",
       textStyle: {
-        color: '#fff'
+        color: "#fff",
+        rich: {
+          a: { fontWeight: "bold" },
+          b: { color: "#ccc" },
+          c: { fontWeight: "bold" },
+        },
       },
-      rich: {
-        a: { fontWeight: 'bold' },
-        b: { color: '#ccc' },
-        c: { fontWeight: 'bold' }
-      }
+      // Now rich tokens will be styled instead of printed
+      formatter: `{a|${statusMessage}}\n{b|Value}: {c|${value.toFixed(
+        2
+      )}${unit}}`,
     },
     series: [
       {
-        type: 'gauge',
+        type: "gauge",
         progress: { show: true, width: 20 },
         axisLine: { lineStyle: { width: 20 } },
         axisTick: { show: false },
@@ -33,24 +42,38 @@ export default function StyledGaugeChart({ value = 0, statusMessage = '', status
         pointer: { show: false },
         detail: {
           valueAnimation: true,
-          offsetCenter: [0, '5%'],
+          offsetCenter: [0, "5%"],
           formatter: function (val) {
-            return '{value|' + val.toFixed(1) + unit + '}\n\n' + '{status|' + statusMessage + '}';
+            return (
+              "{value|" +
+              val.toFixed(1) +
+              unit +
+              "}\n\n" +
+              "{status|" +
+              statusMessage +
+              "}"
+            );
           },
           rich: {
-            value: { fontSize: 32, fontWeight: 'bolder', color: '#333' },
-            status: { fontSize: 14, color: '#666', padding: [5, 0] }
-          }
+            value: { fontSize: 32, fontWeight: "bolder", color: "#333" },
+            status: { fontSize: 14, color: "#666", padding: [5, 0] },
+          },
         },
         data: [
           {
             value: value,
-            itemStyle: { color: statusColor }
-          }
-        ]
-      }
-    ]
+            itemStyle: { color: statusColor },
+          },
+        ],
+      },
+    ],
   };
 
-  return <ReactECharts option={option} style={{ height: '100%', width: '100%' }} notMerge={true} />;
+  return (
+    <ReactECharts
+      option={option}
+      style={{ height: "100%", width: "100%" }}
+      notMerge={true}
+    />
+  );
 }

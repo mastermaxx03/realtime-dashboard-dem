@@ -1,7 +1,7 @@
-import React from 'react';
-import { Tally5, History, Download, X, RefreshCw } from 'lucide-react';
+import React from "react";
+import { Tally5, History, Download, X, RefreshCw } from "lucide-react";
 // --- CHANGED: Import the new reusable chart ---
-import StyledGaugeChart from './StyledGaugeChart';
+import StyledGaugeChart from "./StyledGaugeChart";
 
 import {
   modalCardStyle,
@@ -13,44 +13,44 @@ import {
   modalColumnStyle,
   modalFooterStyle,
   modalButtonStyle,
-  modalButtonPrimaryStyle
-} from '../../../styles/modalLayout';
+  modalButtonPrimaryStyle,
+} from "../../../styles/modalLayout";
 
 const chartTitleStyle = {
-  textAlign: 'center',
+  textAlign: "center",
   fontWeight: 600,
-  fontSize: '1rem',
-  color: '#343a40',
-  marginBottom: '8px'
+  fontSize: "1rem",
+  color: "#343a40",
+  marginBottom: "8px",
 };
 
 const metricsContainerStyle = {
-  display: 'flex',
-  justifyContent: 'space-around',
-  width: '100%',
-  padding: '20px 0',
-  borderTop: '1px solid #e9ecef',
-  borderBottom: '1px solid #e9ecef',
-  backgroundColor: '#f8f9fa'
+  display: "flex",
+  justifyContent: "space-around",
+  width: "100%",
+  padding: "20px 0",
+  borderTop: "1px solid #e9ecef",
+  borderBottom: "1px solid #e9ecef",
+  backgroundColor: "#f8f9fa",
 };
 
 const metricBoxStyle = {
-  textAlign: 'center'
+  textAlign: "center",
 };
 
 const metricLabelStyle = {
-  fontSize: '0.75rem',
-  color: '#6c757d',
-  marginBottom: '4px',
-  textTransform: 'uppercase',
-  fontWeight: '600'
+  fontSize: "0.75rem",
+  color: "#6c757d",
+  marginBottom: "4px",
+  textTransform: "uppercase",
+  fontWeight: "600",
 };
 
 const metricValueStyle = {
-  fontSize: '1.25rem',
-  fontWeight: 'bold',
-  color: '#212529',
-  lineHeight: 1.2
+  fontSize: "1.25rem",
+  fontWeight: "bold",
+  color: "#212529",
+  lineHeight: 1.2,
 };
 
 export default function RTLoadModal({ data, onClose, onRefresh }) {
@@ -59,29 +59,32 @@ export default function RTLoadModal({ data, onClose, onRefresh }) {
   };
 
   // --- ADDED: Logic for Load Factor is now inside the modal ---
-  const loadFactor = data.peakDemand > 0 ? (data.avgPower / data.peakDemand) * 100 : 0;
+  const loadFactor =
+    data.peakDemand > 0 ? (data.avgPower / data.peakDemand) * 100 : 0;
   let statusColor;
   let statusMessage;
 
   if (loadFactor < 30) {
-    statusColor = '#FF6347'; // Red
-    statusMessage = 'Poor Utilization';
+    statusColor = "#FF6347"; // Red
+    statusMessage = "Poor Utilization";
   } else if (loadFactor < 60) {
-    statusColor = '#FFA500'; // Orange
-    statusMessage = 'Moderate Utilization';
+    statusColor = "#FFA500"; // Orange
+    statusMessage = "Moderate Utilization";
   } else if (loadFactor < 75) {
-    statusColor = '#91CC75'; // Light Green
-    statusMessage = 'Good Utilization';
+    statusColor = "#91CC75"; // Light Green
+    statusMessage = "Good Utilization";
   } else {
-    statusColor = '#3CB371'; // Dark Green
-    statusMessage = 'Excellent Utilization';
+    statusColor = "#3CB371"; // Dark Green
+    statusMessage = "Excellent Utilization";
   }
 
   return (
     <div style={modalCardStyle} onClick={handleCardClick}>
       {/* Header (Unchanged) */}
       <div style={modalHeaderStyle}>
-        <h2 style={modalHeaderTitleStyle}>{data.title || 'REAL-TIME LOAD & LOAD FACTOR'}</h2>
+        <h2 style={modalHeaderTitleStyle}>
+          {data.title || "REAL-TIME LOAD & LOAD FACTOR"}
+        </h2>
         <div style={modalHeaderControlsStyle}>
           <span>{data.date}</span>
           <span>{data.time}</span>
@@ -107,7 +110,9 @@ export default function RTLoadModal({ data, onClose, onRefresh }) {
         </div>
         <div style={metricBoxStyle}>
           <div style={metricLabelStyle}>RT Load %</div>
-          <div style={metricValueStyle}>{data.rtLoad.percentage}%</div>
+          <div style={metricValueStyle}>
+            {data.rtLoad.percentage.toFixed(2)}%
+          </div>
         </div>
         <div style={metricBoxStyle}>
           <div style={metricLabelStyle}>Peak Demand</div>
@@ -124,7 +129,7 @@ export default function RTLoadModal({ data, onClose, onRefresh }) {
         <div style={modalColumnStyle}>
           <h3 style={chartTitleStyle}>RT Load %</h3>
           {/* --- CHANGED: Height is reduced to prevent scrolling --- */}
-          <div style={{ height: '250px' }}>
+          <div style={{ height: "250px" }}>
             <StyledGaugeChart
               value={data.rtLoad.percentage}
               statusMessage="Real-Time"
@@ -136,8 +141,12 @@ export default function RTLoadModal({ data, onClose, onRefresh }) {
         <div style={modalColumnStyle}>
           <h3 style={chartTitleStyle}>Load Factor</h3>
           {/* --- CHANGED: Height is reduced and using the new reusable component --- */}
-          <div style={{ height: '250px' }}>
-            <StyledGaugeChart value={loadFactor} statusMessage={statusMessage} statusColor={statusColor} />
+          <div style={{ height: "250px" }}>
+            <StyledGaugeChart
+              value={loadFactor}
+              statusMessage={statusMessage}
+              statusColor={statusColor}
+            />
           </div>
         </div>
       </div>
