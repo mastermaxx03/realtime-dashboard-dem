@@ -931,54 +931,79 @@ const RealtimeLayoutPage2 = () => {
         </button> */}
 
         {/* Row 1 */}
-        <div className="dashboard-layout">
-          {/* All 'card-span-*' classes have been removed */}
+        <div className="dashboard-scroll">
+          {/* fixed 4-column grid that can overflow horizontally */}
+          <div className="dashboard-grid">
+            {/* Row 1 (4 cards) */}
+            <PanelInfoSegment
+              className="card"
+              data={panelInfoData}
+              onExpandClick={handleOpenPanelModal}
+            />
+            <AvgPFSegment
+              className="card"
+              data={avgPFData}
+              onExpandClick={handleOpenAvgPFModal}
+            />
+            <TotalPowerSegment
+              className="card"
+              data={totalPowerData}
+              onExpandClick={handleOpenTotalPowerModal}
+            />
+            <RealtimeCost
+              className="card"
+              data={costData}
+              isLoading={isCostLoading}
+              onExpandClick={() => {}}
+            />
 
-          <PanelInfoSegment
-            data={panelInfoData}
-            onExpandClick={handleOpenPanelModal}
-          />
-          <AvgPFSegment data={avgPFData} onExpandClick={handleOpenAvgPFModal} />
-          <TotalPowerSegment
-            data={totalPowerData}
-            onExpandClick={handleOpenTotalPowerModal}
-          />
-          <RealtimeCost
-            data={costData}
-            isLoading={isCostLoading}
-            onExpandClick={() => {}}
-          />
+            {/* Row 2 (4 cards) */}
+            <CurrentCompSegment
+              className="card"
+              data={currentData}
+              onExpandClick={handleOpenCurrentCompModal}
+            />
+            <PerformanceSegment
+              className="card"
+              score={performanceData.score}
+              machineId={did}
+            />
+            <EnergyConsumptionSegment
+              className="card"
+              data={energyConsumptionData}
+              activeMetric={activeEnergy}
+              onSelectMetric={setActiveEnergy}
+              onExpandClick={handleOpenEConsumptionModal}
+            />
+            <THDSegment
+              className="card"
+              vData={thdvData}
+              iData={thdiData}
+              onExpandClick={handleOpenHarmonicsModal}
+            />
 
-          <CurrentCompSegment
-            data={currentData}
-            onExpandClick={handleOpenCurrentCompModal}
-          />
-          <PerformanceSegment score={performanceData.score} machineId={did} />
-          <EnergyConsumptionSegment
-            data={energyConsumptionData}
-            activeMetric={activeEnergy}
-            onSelectMetric={setActiveEnergy}
-            onExpandClick={handleOpenEConsumptionModal}
-          />
-          <THDSegment
-            vData={thdvData}
-            iData={thdiData}
-            onExpandClick={handleOpenHarmonicsModal}
-          />
-
-          <VoltageSegment
-            data={voltageData}
-            onExpandClick={handleOpenVoltageModal}
-          />
-          <LoadSegment data={loadData} onExpandClick={handleOpenRTLoadModal} />
-          <VoltageLNSegment
-            data={voltageLNData}
-            onExpandClick={handleOpenVoltageLNModal}
-          />
-          <FrequencySegment
-            data={frequencyData}
-            onExpandClick={handleOpenFrequencyModal}
-          />
+            {/* Row 3 (4 cards) */}
+            <VoltageSegment
+              className="card"
+              data={voltageData}
+              onExpandClick={handleOpenVoltageModal}
+            />
+            <LoadSegment
+              className="card"
+              data={loadData}
+              onExpandClick={handleOpenRTLoadModal}
+            />
+            <VoltageLNSegment
+              className="card"
+              data={voltageLNData}
+              onExpandClick={handleOpenVoltageLNModal}
+            />
+            <FrequencySegment
+              className="card"
+              data={frequencyData}
+              onExpandClick={handleOpenFrequencyModal}
+            />
+          </div>
         </div>
         {isPanelModalOpen &&
           pageRef.current &&

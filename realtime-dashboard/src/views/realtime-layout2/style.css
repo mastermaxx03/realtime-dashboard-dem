@@ -1,5 +1,48 @@
 /* new-layout.css */
+.dashboard-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 14px;
+}
 
+/* 4 fixed columns; each tile has a min width so total grid can overflow -> scroll */
+.dashboard-grid {
+  display: grid;
+  gap: 20px;
+  align-items: stretch;
+
+  /* 4 columns; each column can grow but won't shrink below 300px */
+  grid-template-columns: repeat(4, minmax(300px, 1fr));
+
+  /* Ensure the grid's total min width is wider than narrow screens => horizontal scroll kicks in */
+  min-width: calc(4 * 300px + 3 * 20px); /* 4 cols * 300 + 3 gaps * 20 */
+}
+
+/* Make cards behave as single-span tiles, even if old span classes exist */
+.dashboard-grid > * {
+  grid-column: span 1 !important;
+}
+
+/* Optional: on very wide screens give a bit more breathing space per column */
+@media (min-width: 1600px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(4, minmax(340px, 1fr));
+    min-width: calc(4 * 340px + 3 * 20px);
+  }
+}
+
+/* Optional: slightly tighter min width for medium screens to reduce scrolling */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(4, minmax(280px, 1fr));
+    min-width: calc(4 * 280px + 3 * 20px);
+  }
+}
+
+/* Optional: card baseline styles if needed */
+.card {
+  min-height: 220px; /* or whatever fits your components */
+}
 /* The new, simpler grid container */
 .dashboard-layout {
   display: grid;
